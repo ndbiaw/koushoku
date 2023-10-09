@@ -1,0 +1,83 @@
+{{- define "submissions.html" }}
+  <!DOCTYPE html>
+  <html lang="{{ language }}">
+    {{- template "head" . }}
+    <body>
+      {{- template "header" . }}
+      <main class="feed" id="submissions">
+        <header>
+          <h2>Submissions ({{ .total }})</h2>
+          {{- if .data }}
+            {{- template "pagination" . }}
+          {{- end }}
+        </header>
+        {{- if .data }}
+          <div class="entries">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Submitter</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{- $format := "Mon, 02 Jan 2006 15:04:05 MST" }}
+                {{- range .data }}
+                  <tr class="entry">
+                    <td>
+                      {{ .ID }}
+                    </td>
+                    <td>
+                      {{ .Name }}
+                    </td>
+                    <td>
+                      {{- if .Submitter }}
+                        {{ .Submitter }}
+                      {{- else }}
+                        anonymous
+                      {{- end }}
+                    </td>
+                    <td>
+                      {{ formatUnix .CreatedAt $format }}
+                    </td>
+                  </tr>
+                  <tr class="entry-status">
+                    <td colspan="{{ if or .Archives .Notes }}2{{ else }}100{{ end }}">
+                      <div class="state">
+                        {{- if .Accepted }}
+                          <span class="accepted">Accepted {{ formatUnix .AcceptedAt $format }}</span>
+                        {{- else }}
+                          <span class="rejected">Rejected {{ formatUnix .RejectedAt $format }}</span>
+                        {{- end }}
+                      </div>
+                    </td>
+                    {{- if or .Archives .Notes }}
+                      <td colspan="2">
+                        {{- if .Notes }}
+                          <p>
+                            Note:
+                            {{ .Notes }}
+                          </p>
+                        {{- end }}
+                        {{- if .Archives }}
+                          <ul>
+                            {{- range $i, $v := .Archives }}
+                              <li><a href="/archive/{{ .ID }}/{{ .Slug }}">archive/{{ .ID }} - {{ .Title }}</a></li>
+                            {{- end }}
+                          </ul>
+                        {{- end }}
+                      </td>
+                    {{- end }}
+                  </tr>
+                {{- end }}
+              </tbody>
+            </table>
+          </div>
+        {{- end }}
+      </main>
+      {{- template "footer" . }}
+    </body>
+  </html>
+{{- end }}

@@ -1,0 +1,30 @@
+upstream koushoku {
+  server 127.0.0.1:42073;
+  server 127.0.0.1:42074;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+
+  server_name domain.com www.domain.com;
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+
+  server_name domain.com www.domain.com;
+  add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains; preload';
+  add_header X-Frame-Options SAMEORIGIN;
+  add_header X-Content-Type-Options "nosniff";
+  add_header X-XSS-Protection "1; mode=block";
+  add_header Referrer-Policy "strict-origin";
+  add_header Permissions-Policy "fullscreen=(self)";
+
+  location / {
+    proxy_pass http://koushoku;
+  }
+}
+

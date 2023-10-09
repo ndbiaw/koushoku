@@ -1,0 +1,210 @@
+{{- define "stats.html" }}
+  <!DOCTYPE html>
+  <html lang="{{ language }}">
+    {{- template "head" . }}
+    <body>
+      {{- template "header" . }}
+      <main id="stats">
+        <h2>Stats</h2>
+        <table>
+          <tr>
+            <td>Number of archives</td>
+            <td>{{ .stats.ArchiveCount }}</td>
+          </tr>
+          <tr>
+            <td>Total number of pages</td>
+            <td>{{ .stats.PageCount }}</td>
+          </tr>
+          <tr>
+            <td>Average number of pages</td>
+            <td>{{ .stats.AveragePageCount }}</td>
+          </tr>
+          <tr>
+            <td>Total archive filesize</td>
+            <td>{{ .stats.Size }} bytes ({{ formatBytes .stats.Size }})</td>
+          </tr>
+          <tr>
+            <td>Average archive filesize</td>
+            <td>{{ .stats.AverageSize }} bytes ({{ formatBytes .stats.AverageSize }})</td>
+          </tr>
+          <tr>
+            <td>Number of artists</td>
+            <td>{{ .stats.ArtistCount }}</td>
+          </tr>
+          <tr>
+            <td>Number of circles</td>
+            <td>{{ .stats.CircleCount }}</td>
+          </tr>
+          <tr>
+            <td>Number of magazines</td>
+            <td>{{ .stats.MagazineCount }}</td>
+          </tr>
+          <tr>
+            <td>Number of parodies</td>
+            <td>{{ .stats.ParodyCount }}</td>
+          </tr>
+          <tr>
+            <td>Number of tags</td>
+            <td>{{ .stats.TagCount }}</td>
+          </tr>
+        </table>
+        <p>
+          <small
+            >*CG sets, illustrations, non-h, spreads, westerns, FURRY and 1-page manga/doujins are not indexed.</small
+          >
+        </p>
+        <h2>Analytics</h2>
+        <div class="total">
+          <div class="bytes">
+            <strong>Data Served</strong>
+            <span>{{ formatBytes .stats.Analytics.Bytes }}</span>
+          </div>
+          <div class="cachedBytes">
+            <strong>Cached Data</strong>
+            <span>{{ formatBytes .stats.Analytics.CachedBytes }}</span>
+          </div>
+          <div class="requests">
+            <strong>Requests</strong>
+            <span>{{ formatNumber .stats.Analytics.Requests }}</span>
+          </div>
+          <div class="cachedRequests">
+            <strong>Cached Requests</strong>
+            <span>{{ formatNumber .stats.Analytics.CachedRequests }}</span>
+          </div>
+        </div>
+        <canvas id="dataChart" width="1366" height="400"></canvas>
+        <canvas id="requestsChart" width="1366" height="400"></canvas>
+        <p>
+          <small>Last Updated: {{ formatTime .stats.Analytics.LastUpdated "Mon, 02 Jan 2006 15:04:05 MST" }}</small>
+        </p>
+        <p><small>*Resets yearly</small></p>
+      </main>
+      {{- template "footer" . }}
+
+
+      <script
+        src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"
+        integrity="sha256-ErZ09KkZnzjpqcane4SCyyHsKAXMvID9/xwbl/Aq1pc="
+        crossorigin="anonymous"
+      ></script>
+      <script>
+const kb = 1024;
+const units = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+const formatBytes = (bytes) => {
+  if (bytes === 0) return "0 Bytes";
+  const i = Math.floor(Math.log(bytes) / Math.log(kb));
+  return `${(bytes / kb ** i).toFixed(1)} ${units[i]}`;
+};
+
+const labels =  [
+  {{- range $i, $v := .stats.Analytics.Entries -}}
+    {{- if $i -}},{{- end -}}"{{ .Date }}"
+  {{- end -}}
+];
+
+const primarySet = {
+  fill: true,
+  backgroundColor: "rgba(54, 162, 235, 0.2)",
+  borderColor: "rgba(54, 162, 235, 1)",
+  borderWidth: 1.5,
+  tension: 0.4
+}
+
+const secondarySet = {
+  fill: true,
+  backgroundColor: "rgba(255, 159, 64, 0.2)",
+  borderColor: "rgba(255, 159, 64, 1)",
+  borderWidth: 1.5,
+  tension: 0.4
+}
+
+const dataCtx = document.getElementById("dataChart").getContext("2d");
+const dataChart = new Chart(dataCtx, {
+  type: "line",
+  data: {
+    labels,
+    datasets: [
+      {
+        label: "Data Served",
+        data: [
+          {{- range $i, $v := .stats.Analytics.Entries -}}
+            {{- if $i -}},{{- end }}
+            {{ .Bytes }}
+          {{- end }}
+        ],
+        ...primarySet
+      },
+      {
+        label: "Cached Data",
+        data: [
+          {{- range $i, $v := .stats.Analytics.Entries -}}
+            {{- if $i -}},{{- end }}
+            {{ .CachedBytes }}
+          {{- end }}
+        ],
+        ...secondarySet
+      },
+    ]
+  },
+  options: {
+    scales: {
+      x: {
+        ticks: { display: false }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value, index, values) => formatBytes(value)
+        }
+      }
+    }
+  }
+});
+
+const requestsCtx = document.getElementById("requestsChart").getContext("2d");
+const requestsChart = new Chart(requestsCtx, {
+  type: "line",
+  data: {
+    labels,
+    datasets: [
+      {
+        label: "Requests",
+        data: [
+          {{- range $i, $v := .stats.Analytics.Entries -}}
+            {{- if $i -}},{{- end }}
+            {{ .Requests }}
+          {{- end }}
+        ],
+        ...primarySet
+      },
+      {
+        label: "Cached Requests",
+        data: [
+          {{- range $i, $v := .stats.Analytics.Entries -}}
+            {{- if $i -}},{{- end }}
+            {{ .CachedRequests }}
+          {{- end }}
+        ],
+        ...secondarySet
+      },
+    ]
+  },
+  options: {
+    scales: {
+      x: {
+        ticks: { display: false }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: (value, index, values) => value.toLocaleString()
+        }
+      }
+    }
+  }
+});
+      </script>
+    </body>
+  </html>
+{{- end }}

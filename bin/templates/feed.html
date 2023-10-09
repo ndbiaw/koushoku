@@ -1,0 +1,53 @@
+{{- define "feed" }}
+  {{- $dataBaseURL := .dataBaseURL }}
+  <div class="entries">
+    {{- range .archives }}
+      <article
+        class="entry"
+        {{- if .Tags }}data-tags="{{- range $i, $v := .Tags -}}{{ if $i }}|{{ end }}{{ .Name }}{{ end }}"{{- end }}
+      >
+        <a href="/archive/{{ .ID }}/{{ .Slug }}" title="{{ .Title }}">
+          <figure class="thumbnail">
+            <img
+              alt="Thumbnail for {{ .Title }}"
+              title="{{ .Title }}"
+              src="{{ $dataBaseURL }}/data/{{ .ID }}/1/288.webp"
+              loading="lazy"
+            />
+            <div class="metadata">
+              {{- if .Magazines }}
+                {{- $magazine := (index .Magazines 0) }}
+                <span class="magazine">{{ $magazine.Name }}</span>
+              {{- end }}
+              <span class="pages">{{ .Pages }}P</span>
+            </div>
+          </figure>
+          <div class="metadata">
+            <h3 class="title">
+              <span>{{ .Title }}</span>
+            </h3>
+            {{- if .Artists }}
+              <div class="artists">
+                {{- range $i, $v:= .Artists }}
+                  {{- if $i -}}
+                    <span>,</span>
+                  {{- end }}
+                  <span>{{ .Name }}</span>
+                {{- end }}
+              </div>
+            {{- else if .Circles }}
+              <div class="circles">
+                {{- range $i, $v:= .Circles }}
+                  {{- if $i -}}
+                    <span>,</span>
+                  {{- end }}
+                  <span>{{ .Name }}</span>
+                {{- end }}
+              </div>
+            {{- end }}
+          </div>
+        </a>
+      </article>
+    {{- end }}
+  </div>
+{{- end }}

@@ -1,0 +1,28 @@
+{{- define "reader.html" }}
+  <!DOCTYPE html>
+  <html lang="{{ language }}">
+    {{- template "head" . }}
+    <body
+      id="reader"
+      data-id="{{ .archive.ID }}"
+      data-slug="{{ .archive.Slug }}"
+      data-total-pages="{{ .archive.Pages }}"
+    >
+      <header>
+        {{- template "reader_pagination". }}
+      </header>
+      <main class="page">
+        {{- $next := .pageNum }}
+        {{- if lt $next .archive.Pages }}
+          {{- $next = (inc $next) }}
+        {{- end }}
+        <a href="/archive/{{ .archive.ID }}/{{ .archive.Slug }}/{{ $next }}">
+          <img src="{{ .dataBaseURL }}/data/{{ .archive.ID }}/{{ .pageNum }}.jpg" />
+        </a>
+      </main>
+      <footer>
+        {{- template "reader_pagination". }}
+      </footer>
+    </body>
+  </html>
+{{- end }}

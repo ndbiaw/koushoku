@@ -1,0 +1,56 @@
+{{- define "submit.html" }}
+  <!DOCTYPE html>
+  <html lang="{{ language }}">
+    {{- template "head" . }}
+    <body>
+      {{- template "header" . }}
+      <main id="submission">
+        {{- if .error }}
+          <p class="error">{{ .error }}</p>
+        {{- end }}
+        {{- if .message }}
+          <p class="message">{{ .message }}</p>
+        {{- end }}
+        <h2>Submit</h2>
+        <p>
+          Submission has a limit of 10.240 characters and URLs must be separated by new lines. You can only submit 10
+          submissions per day and they will be reviewed manually within less than 7 days.
+        </p>
+        <h3>Rules for submission</h3>
+        <ul>
+          <li>No non-h and 1-page manga/doujins</li>
+          <li>No watermarks and compressions</li>
+          <li>No downscaling or force upscaling</li>
+        </ul>
+        <p>
+          URL must be either a site which allow downloading, a direct download link or a torrent. To replace an existing
+          archive with a better version, put [Replace] or [Revision] prefix in the title.
+        </p>
+        <form method="post" enctype="multipart/form-data">
+          <input
+            type="text"
+            name="name"
+            placeholder="Title"
+            required
+            maxlength="1024"
+            autocomplete="off"
+            {{- if .lastSubmissionName }}value="{{ .lastSubmissionName }}"{{- end }}
+          />
+          <input
+            type="text"
+            name="submitter"
+            placeholder="Submitter name (Optional)"
+            autocomplete="off"
+            maxlength="128"
+            {{- if .lastSubmissionSubmitter }}value="{{ .lastSubmissionSubmitter }}"{{- end }}
+          />
+          <textarea name="content" placeholder="URLs, separated by new line." maxlength="10240" required>
+{{- if .lastSubmissionContent }}{{ .lastSubmissionContent }}{{- end }}</textarea
+          >
+          <button type="submit">Submit</button>
+        </form>
+      </main>
+      {{- template "footer" . }}
+    </body>
+  </html>
+{{- end }}

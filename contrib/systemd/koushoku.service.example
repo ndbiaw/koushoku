@@ -1,0 +1,16 @@
+[Unit]
+Description=Koushoku web server
+After=syslog.target
+After=network.target
+Wants=postgresql.service
+After=postgresql.service
+
+[Service]
+RestartSec=2s
+Type=simple
+WorkingDirectory=/root/koushoku/bin
+ExecStart=/root/koushoku/bin/webServer
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

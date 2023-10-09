@@ -1,0 +1,53 @@
+{{- define "header" }}
+  <header>
+    <nav aria-label="Primary">
+      <ul>
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/artists">Artists</a>
+        </li>
+        <li>
+          <a href="/magazines">Magazines</a>
+        </li>
+        <li>
+          <a href="/tags">Tags</a>
+        </li>
+        <li>
+          <a href="/submit">Submit</a>
+        </li>
+        <li>
+          <a href="/updates.txt" target="_blank">Info</a>
+        </li>
+      </ul>
+      <form action="/search" method="get">
+        <input
+          type="text"
+          name="q"
+          placeholder="tag&:petite,creampie -tag:netorare,netori,netorase,ugly_bastard"
+          value="{{ .queries.Search }}"
+          aria-label="Search"
+          autocomplete="off"
+          required
+        />
+        <button type="submit" aria-label="Search">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </form>
+    </nav>
+  </header>
+{{- end }}

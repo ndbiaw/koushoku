@@ -1,0 +1,20 @@
+{{- define "error.html" -}}
+  <!DOCTYPE html>
+  <html lang="{{ language }}">
+    {{- template "head" . }}
+    <body>
+      {{- template "header" . }}
+      <main id="error">
+        <h1>{{ .status }} {{ .statusText }}</h1>
+        {{- if .errors }}
+          {{- range .errors }}
+            <p>{{ . }}</p>
+          {{- end }}
+        {{- else }}
+          <p>{{ .error }}</p>
+        {{- end }}
+      </main>
+      {{- template "footer" . }}
+    </body>
+  </html>
+{{- end }}

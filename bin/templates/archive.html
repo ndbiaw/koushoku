@@ -1,0 +1,222 @@
+{{- define "archive.html" }}
+  <!DOCTYPE html>
+  <html lang="{{ language }}">
+    {{- template "head" . }}
+    <body>
+      {{- template "header" . }}
+      {{- $archive := .archive }}
+      {{- $dataBaseURL := .dataBaseURL }}
+      <main id="archive">
+        <aside>
+          <figure class="thumbnail">
+            <a href="/archive/{{ .archive.ID }}/{{ .archive.Slug }}/1">
+              <img
+                alt="Thumbnail for {{ .archive.Title }}"
+                src="{{ .dataBaseURL }}/data/{{ .archive.ID }}/1/896.webp"
+                loading="lazy"
+              />
+            </a>
+          </figure>
+        </aside>
+        <div class="metadata">
+          <h1 class="title">{{ .archive.Title }}</h1>
+          <table>
+            <tbody>
+              {{- if .archive.Artists }}
+                <tr class="artists">
+                  <td>Artist{{- if gt (len .archive.Artists) 1 }}s{{- end }}</td>
+                  <td>
+                    {{- range $i, $v := .archive.Artists }}
+                      {{- if $i }},{{- end }}
+                      <a href="/artists/{{ .Slug }}">{{ .Name }}</a>
+                    {{- end }}
+                  </td>
+                </tr>
+              {{- end }}
+              {{- if .archive.Circles }}
+                <tr class="circles">
+                  <td>Circle{{- if gt (len .archive.Circles) 1 }}s{{- end }}</td>
+                  <td>
+                    {{- range $i, $v := .archive.Circles }}
+                      {{- if $i }},{{- end }}
+                      <a href="/circles/{{ .Slug }}">{{ .Name }}</a>
+                    {{- end }}
+                  </td>
+                </tr>
+              {{- end }}
+              {{- if .archive.Magazines }}
+                <tr class="magazines">
+                  <td>Magazine{{- if gt (len .archive.Magazines) 1 }}s{{- end }}</td>
+                  <td>
+                    {{- range $i, $v := .archive.Magazines }}
+                      {{- if $i }},{{- end }}
+                      <a href="/magazines/{{ .Slug }}">{{ .Name }}</a>
+                    {{- end }}
+                  </td>
+                </tr>
+              {{- end }}
+              {{- if .archive.Parodies }}
+                <tr class="parodies">
+                  <td>{{- if gt (len .archive.Parodies) 1 }}Parodies{{- else }}Parody{{- end }}</td>
+                  <td>
+                    {{- range $i, $v := .archive.Parodies }}
+                      {{- if $i }},{{- end }}
+                      <a href="/parodies/{{ .Slug }}">{{ .Name }}</a>
+                    {{- end }}
+                  </td>
+                </tr>
+              {{- end }}
+              {{- if .archive.Tags }}
+                <tr class="tags">
+                  <td>Tags</td>
+                  <td>
+                    {{- range $i, $v := .archive.Tags }}
+                      {{- if $i }},{{- end }}
+                      <a href="/tags/{{ .Slug }}">{{ .Name }}</a>
+                    {{- end }}
+                  </td>
+                </tr>
+              {{- end }}
+              <tr class="pages">
+                <td>Pages</td>
+                <td>{{ .archive.Pages }}</td>
+              </tr>
+              <tr class="size">
+                <td>Size</td>
+                <td>{{ formatBytes .archive.Size }}</td>
+              </tr>
+              {{- $format := "Mon, 02 Jan 2006 15:04:05 MST" }}
+              <tr class="created createdAt">
+                <td>Created</td>
+                <td data-unix="{{ .archive.CreatedAt }}">{{ formatUnix .archive.CreatedAt $format }}</td>
+              </tr>
+              <tr class="published publishedAt">
+                <td>Published</td>
+                <td data-unix="{{ .archive.PublishedAt }}">{{ formatUnix .archive.PublishedAt $format }}</td>
+              </tr>
+              {{- if .archive.Submission }}
+                <tr class="submitter">
+                  <td>Submitter</td>
+                  <td>
+                    {{- if .archive.Submission.Submitter }}
+                      {{ .archive.Submission.Submitter }}
+                    {{- else }}
+                      anonymous
+                    {{- end }}
+                    (#{{ .archive.Submission.ID }})
+                  </td>
+                </tr>
+              {{- end }}
+              {{- if .archive.Source }}
+                <tr class="source">
+                  <td>Source</td>
+                  <td>
+                    <a href="{{ .archive.Source }}" rel="nofollow noopener noreferrer" target="_blank"
+                      >{{ .archive.Source }}</a
+                    >
+                  </td>
+                </tr>
+              {{- end }}
+            </tbody>
+          </table>
+          <div class="actions">
+            <a class="read" href="/archive/{{ .archive.ID }}/{{ .archive.Slug }}/1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+              <span>Read</span>
+            </a>
+            <a
+              class="download"
+              href="{{ .dataBaseURL }}/archive/{{ .archive.ID }}/{{ .archive.Slug }}/download"
+              download
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Download</span>
+            </a>
+            <a href="/archive/{{ .archive.ID }}/{{ .archive.Slug }}.json" target="_blank">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>Metadata.json</span>
+            </a>
+            {{- if and .archive.Source (contains .archive.Source "nyaa.si") }}
+              <a class="torrent" href="{{ .archive.Source }}" rel="nofollow noopener noreferrer" target="_blank">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+                <span>Torrent</span>
+              </a>
+            {{- end }}
+          </div>
+        </div>
+        <div class="previews">
+          {{- range $i, $v := (makeSlice .archive.Pages ) }}
+            {{ $n := inc $i }}
+            <div class="preview">
+              <div>
+                <a href="/archive/{{ $archive.ID }}/{{ $archive.Slug }}/{{ $n }}">
+                  <img
+                    alt="Preview of page {{ $n }} for {{ $archive.Title }}"
+                    src="{{ $dataBaseURL }}/data/{{ $archive.ID }}/{{ $n }}/320.webp"
+                    loading="lazy"
+                  />
+                </a>
+              </div>
+            </div>
+          {{- end }}
+        </div>
+      </main>
+      {{- template "footer" . }}
+    </body>
+  </html>
+{{- end }}

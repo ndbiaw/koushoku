@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{{ baseURL }}</loc>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>{{ baseURL }}/artists</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>{{ baseURL }}/magazines</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>{{ baseURL }}/tags</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  {{- range .artists }}
+    <url>
+      <loc>{{ baseURL }}/artists/{{ .Slug }}</loc>
+      <changefreq>daily</changefreq>
+    </url>
+  {{- end }}
+  {{- range .magazines }}
+    <url>
+      <loc>{{ baseURL }}/magazines/{{ .Slug }}</loc>
+      <changefreq>daily</changefreq>
+    </url>
+  {{- end }}
+  {{- range .tags }}
+    <url>
+      <loc>{{ baseURL }}/tags/{{ .Slug }}</loc>
+      <changefreq>daily</changefreq>
+    </url>
+  {{- end }}
+  {{- range .archives }}
+    <url>
+      <loc>{{ baseURL }}/archive/{{ .ID }}/{{ .Slug }}</loc>
+      <lastmod>{{ formatUnix .UpdatedAt "2006-01-02" }}</lastmod>
+      <changefreq>weekly</changefreq>
+    </url>
+  {{- end }}
+</urlset>

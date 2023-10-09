@@ -1,0 +1,36 @@
+{{- define "taxonomy.html" }}
+  <!DOCTYPE html>
+  <html lang="{{ language }}">
+    {{- template "head" . }}
+    <body>
+      {{- template "header" . }}
+      <main>
+        <section class="feed" id="archives">
+          <header>
+            <h2>{{ .taxonomy }} ({{ .total }})</h2>
+            {{- if .archives }}
+              {{- template "sort". }}
+              {{- template "pagination" . }}
+            {{- end }}
+          </header>
+          {{- if .archives }}
+            {{- template "feed" . }}
+            <footer>
+              {{- template "pagination" . }}
+            </footer>
+          {{- else }}
+            <div class="empty">
+              {{- if .hasQueries }}
+                <h3>No results found</h3>
+                <p>There are no results that match your search criteria</p>
+              {{- else }}
+                <p>Not yet available</p>
+              {{- end }}
+            </div>
+          {{- end }}
+        </section>
+      </main>
+      {{- template "footer" . }}
+    </body>
+  </html>
+{{- end }}

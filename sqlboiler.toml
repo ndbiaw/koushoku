@@ -1,0 +1,16 @@
+output              = "models"
+pkgname             = "models"
+wipe                = true
+add-global-variants = true
+no-context          = true
+no-tests            = true
+no-rows-affected    = true
+
+[psql]
+dbname  = "koushoku"
+schema  = "public"
+host    = "localhost"
+port    = 5432
+user    = "koushoku"
+pass    = "koushoku"
+sslmode = "disable"

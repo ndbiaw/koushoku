@@ -1,0 +1,36 @@
+{{- define "list.html" }}
+  <!DOCTYPE html>
+  <html lang="{{ language }}">
+    {{- template "head" . }}
+    <body>
+      {{- template "header" . }}
+      <main>
+        <section class="feed" id="taxonomy">
+          <header>
+            <h2>{{ .taxonomyTitle }} ({{ .total }})</h2>
+            {{- if .data }}
+              {{- template "pagination" . }}
+            {{- end }}
+          </header>
+          {{- if .data }}
+            <div class="entries">
+              {{- $taxonomy := .taxonomy }}
+              {{- range .data }}
+                <div class="entry">
+                  <a href="/{{ $taxonomy }}/{{ .Slug }}">
+                    <strong class="name">{{ .Name }}</strong>
+                    <span class="count">{{ .Count }}</span>
+                  </a>
+                </div>
+              {{- end }}
+            </div>
+            <footer>
+              {{- template "pagination" . }}
+            </footer>
+          {{- end }}
+        </section>
+      </main>
+      {{- template "footer" . }}
+    </body>
+  </html>
+{{- end }}
